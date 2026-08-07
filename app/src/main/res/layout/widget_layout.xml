@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widget_root"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:gravity="center_vertical"
-    android:background="#33000000"
-    android:padding="8dp">
+    android:gravity="start|center_vertical"
+    android:background="@android:color/transparent"
+    android:padding="4dp">
 
     <ImageView
         android:id="@+id/battery_icon"
-        android:layout_width="40dp"
-        android:layout_height="24dp"
+        android:layout_width="42dp"
+        android:layout_height="26dp"
         android:contentDescription="@string/app_name" />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginStart="8dp">
+        android:layout_marginStart="6dp">
 
         <TextView
             android:id="@+id/percent_text"
@@ -27,14 +27,22 @@
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"
+            android:shadowColor="#CC000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3"
             android:text="--%" />
 
         <TextView
             android:id="@+id/voltage_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="#DDFFFFFF"
+            android:textColor="#FFFFFFFF"
             android:textSize="11sp"
+            android:shadowColor="#CC000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3"
             android:text="--V" />
     </LinearLayout>
 </LinearLayout>
