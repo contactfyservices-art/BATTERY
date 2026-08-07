@@ -25,8 +25,28 @@ fichier `app/src/main/java/com/fy/batterywidget/VoltageConverter.kt`.
   autorisé par Android pour les widgets — impossible d'aller plus vite sans
   service en arrière-plan permanent).
 - **Appuyer sur le widget** force une mise à jour instantanée.
-- Couleur de l'icône : vert (> 40 %), orange (15–40 %), rouge (< 15 %), bleu
-  si en charge.
+- Couleur de l'icône (dégradé) : vert (> 40 %), orange (15–40 %), rouge
+  (< 15 %), bleu avec **éclair** si en charge.
+- Fond totalement transparent, widget compact (ne prend que la place de son
+  contenu) pour laisser de la place aux autres widgets sur l'écran d'accueil.
+- Fiabilité : si une lecture de tension est aberrante (glitch système), le
+  widget réaffiche la dernière valeur fiable connue au lieu d'un chiffre faux.
+
+## Mode économie d'énergie automatique sous 20 %
+
+Par défaut, Android interdit à une app normale d'activer le mode économie
+d'énergie sans action de l'utilisateur. Le widget gère ça en deux temps :
+
+1. **Automatique (optionnel, une seule manip)** : connecte ton téléphone à un
+   PC avec le débogage USB activé, puis lance une fois :
+   ```
+   adb shell pm grant com.fy.batterywidget android.permission.WRITE_SECURE_SETTINGS
+   ```
+   À partir de là, le mode économie s'activera tout seul sous 20 % réel
+   (hors charge), sans notification.
+2. **Sans cette manip** : le widget envoie une notification "Batterie réelle
+   sous 20 %" avec un raccourci direct vers l'écran d'activation — 1 tap
+   suffit.
 
 ## Comment obtenir l'APK
 
