@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Batterie Réelle</string>
+    <string name="widget_name">Batterie (tension)</string>
+    <string name="widget_desc">Affiche le pourcentage réel de charge estimé à partir de la tension de la batterie, indépendamment du % système.</string>
+</resources>
