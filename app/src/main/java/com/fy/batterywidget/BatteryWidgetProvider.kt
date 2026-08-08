@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Bundle
+import android.view.View
 import android.widget.RemoteViews
 
 class BatteryWidgetProvider : AppWidgetProvider() {
@@ -27,7 +28,6 @@ class BatteryWidgetProvider : AppWidgetProvider() {
         appWidgetId: Int,
         newOptions: Bundle
     ) {
-        // Appelé quand l'utilisateur redimensionne le widget sur l'écran d'accueil
         updateWidget(context, appWidgetManager, appWidgetId)
     }
 
@@ -53,12 +53,17 @@ class BatteryWidgetProvider : AppWidgetProvider() {
         val widthDp = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, 150) ?: 150
         val heightDp = options?.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, 50) ?: 50
 
-        val iconW = ((widthDp * 0.6f) * density).toInt().coerceAtLeast((20 * density).toInt())
+        // En dessous de 90dp de large, plus assez de place pour le texte à côté :
+        // on le masque et l'icône (qui contient déjà le %) prend toute la place.
+        val compact = widthDp < 90
+        views.setViewVisibility(R.id.side_panel, if (compact) View.GONE else View.VISIBLE)
+
+        val iconWidthFraction = if (compact) 0.92f else 0.55f
+        val iconW = ((widthDp * iconWidthFraction) * density).toInt().coerceAtLeast((20 * density).toInt())
         val iconH = (heightDp * density).toInt().coerceAtLeast((16 * density).toInt())
         val icon = BatteryIconDrawer.draw(iconW, iconH, percent, charging, style)
         views.setImageViewBitmap(R.id.battery_icon, icon)
 
-        // Tap-to-refresh : redéclenche immédiatement une mise à jour
         val refreshIntent = Intent(context, BatteryWidgetProvider::class.java).apply {
             action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(widgetId))
@@ -74,11 +79,6 @@ class BatteryWidgetProvider : AppWidgetProvider() {
         appWidgetManager.updateAppWidget(widgetId, views)
     }
 
-    /**
-     * Lit la tension actuelle (V) et l'état de charge via l'intent collant
-     * ACTION_BATTERY_CHANGED (aucune permission requise, valeur instantanée,
-     * fournie directement par la puce de gestion de batterie).
-     */
     private fun readBatteryStatus(context: Context): Pair<Double, Boolean> {
         val filter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         val batteryStatus = context.registerReceiver(null, filter)
