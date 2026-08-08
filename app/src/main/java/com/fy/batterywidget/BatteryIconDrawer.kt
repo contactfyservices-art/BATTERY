@@ -37,6 +37,36 @@ object BatteryIconDrawer {
         else -> Color.parseColor("#4CAF50")
     }
 
+    /** Dessine le pourcentage (ex: "67%") centré à l'intérieur de l'icône, lisible sur tout fond. */
+    private fun drawPercentLabel(canvas: Canvas, cx: Float, cy: Float, boxWidth: Float, boxHeight: Float, percent: Double) {
+        val label = "${percent.toInt()}%"
+        val textSize = boxHeight * 0.62f
+        val fillPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.WHITE
+            this.textSize = textSize
+            textAlign = Paint.Align.CENTER
+            style = Paint.Style.FILL
+        }
+        val outlinePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+            color = Color.parseColor("#99000000")
+            this.textSize = textSize
+            textAlign = Paint.Align.CENTER
+            style = Paint.Style.STROKE
+            strokeWidth = textSize * 0.09f
+        }
+        // Réduit la taille si le texte dépasse la largeur disponible
+        var size = textSize
+        while (fillPaint.measureText(label) > boxWidth * 0.9f && size > 6f) {
+            size -= 1f
+            fillPaint.textSize = size
+            outlinePaint.textSize = size
+        }
+        val fm = fillPaint.fontMetrics
+        val baselineY = cy - (fm.ascent + fm.descent) / 2f
+        canvas.drawText(label, cx, baselineY, outlinePaint)
+        canvas.drawText(label, cx, baselineY, fillPaint)
+    }
+
     private fun drawBolt(canvas: Canvas, cx: Float, cy: Float, size: Float) {
         val path = Path()
         path.moveTo(cx + size * 0.10f, cy - size * 0.55f)
@@ -85,7 +115,11 @@ object BatteryIconDrawer {
                 bodyRect.left + margin + fillWidth, bodyRect.bottom - margin)
             canvas.drawRoundRect(fillRect, corner * 0.6f, corner * 0.6f, fillPaint)
         }
-        if (charging) drawBolt(canvas, bodyRect.centerX(), bodyRect.centerY(), h * 0.9f)
+        if (charging) {
+            drawBolt(canvas, bodyRect.centerX(), bodyRect.centerY(), h * 0.9f)
+        } else {
+            drawPercentLabel(canvas, bodyRect.centerX(), bodyRect.centerY(), bodyRect.width(), bodyRect.height(), percent)
+        }
     }
 
     private fun drawMinimaliste(canvas: Canvas, w: Int, h: Int, percent: Double, charging: Boolean) {
@@ -108,7 +142,11 @@ object BatteryIconDrawer {
                 rect.left + margin + fillWidth, rect.bottom - margin)
             canvas.drawRoundRect(fillRect, corner * 0.5f, corner * 0.5f, fillPaint)
         }
-        if (charging) drawBolt(canvas, rect.centerX(), rect.centerY(), h * 0.85f)
+        if (charging) {
+            drawBolt(canvas, rect.centerX(), rect.centerY(), h * 0.85f)
+        } else {
+            drawPercentLabel(canvas, rect.centerX(), rect.centerY(), rect.width(), rect.height(), percent)
+        }
     }
 
     private fun drawSegments(canvas: Canvas, w: Int, h: Int, percent: Double, charging: Boolean) {
@@ -126,7 +164,11 @@ object BatteryIconDrawer {
             val rect = RectF(left, 0f, left + segWidth, h.toFloat())
             canvas.drawRoundRect(rect, w * 0.02f, w * 0.02f, paint)
         }
-        if (charging) drawBolt(canvas, w / 2f, h / 2f, h * 0.9f)
+        if (charging) {
+            drawBolt(canvas, w / 2f, h / 2f, h * 0.9f)
+        } else {
+            drawPercentLabel(canvas, w / 2f, h / 2f, w.toFloat(), h.toFloat(), percent)
+        }
     }
 
     private fun drawAnneau(canvas: Canvas, w: Int, h: Int, percent: Double, charging: Boolean) {
@@ -150,6 +192,10 @@ object BatteryIconDrawer {
         val sweep = 360f * (percent / 100f).toFloat()
         canvas.drawArc(rect, -90f, sweep, false, fgPaint)
 
-        if (charging) drawBolt(canvas, rect.centerX(), rect.centerY(), size * 0.45f)
+        if (charging) {
+            drawBolt(canvas, rect.centerX(), rect.centerY(), size * 0.45f)
+        } else {
+            drawPercentLabel(canvas, rect.centerX(), rect.centerY(), rect.width() * 0.75f, rect.height() * 0.75f, percent)
+        }
     }
 }
