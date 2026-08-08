@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choisis un modèle de batterie"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <RadioGroup
+        android:id="@+id/style_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/radio_classique"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Classique (pilule avec borne)"
+            android:checked="true"
+            android:padding="12dp" />
+
+        <RadioButton
+            android:id="@+id/radio_minimaliste"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Minimaliste (contour fin)"
+            android:padding="12dp" />
+
+        <RadioButton
+            android:id="@+id/radio_segments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Segments (5 barres)"
+            android:padding="12dp" />
+
+        <RadioButton
+            android:id="@+id/radio_anneau"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Anneau circulaire"
+            android:padding="12dp" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_confirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Ajouter le widget" />
+
+</LinearLayout>
