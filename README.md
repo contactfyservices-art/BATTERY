@@ -23,30 +23,38 @@ fichier `app/src/main/java/com/fy/batterywidget/VoltageConverter.kt`.
 
 - Mise à jour automatique **toutes les 30 minutes** (c'est le minimum
   autorisé par Android pour les widgets — impossible d'aller plus vite sans
-  service en arrière-plan permanent).
+  service en arrière-plan permanent, voir plus bas).
 - **Appuyer sur le widget** force une mise à jour instantanée.
-- Couleur de l'icône (dégradé) : vert (> 40 %), orange (15–40 %), rouge
-  (< 15 %), bleu avec **éclair** si en charge.
-- Fond totalement transparent, widget compact (ne prend que la place de son
-  contenu) pour laisser de la place aux autres widgets sur l'écran d'accueil.
-- Fiabilité : si une lecture de tension est aberrante (glitch système), le
-  widget réaffiche la dernière valeur fiable connue au lieu d'un chiffre faux.
+- Couleur de l'icône : vert (> 40 %), orange (15–40 %), rouge (< 15 %), bleu
+  si en charge.
+- **Icône qui s'adapte** à la taille du widget quand tu le redimensionnes.
+- **⚡ Éclair** affiché sur l'icône + dans le texte quand le chargeur est branché.
+- **Pourcentage à une décimale** (ex: 73.4 %) au lieu d'un chiffre arrondi.
+- **Lissage anti-bruit** : la tension est moyennée (lissage exponentiel) pour
+  éviter que le % saute d'une lecture à l'autre à cause du bruit du capteur.
 
-## Mode économie d'énergie automatique sous 20 %
+## Modèles de batterie
 
-Par défaut, Android interdit à une app normale d'activer le mode économie
-d'énergie sans action de l'utilisateur. Le widget gère ça en deux temps :
+À l'ajout du widget (ou en le supprimant/re-ajoutant), un écran te demande de
+choisir un style :
+1. **Classique** — pilule avec borne, comme une batterie standard
+2. **Minimaliste** — contour fin, épuré
+3. **Segments** — 5 barres façon indicateur de signal
+4. **Anneau** — cercle de progression
 
-1. **Automatique (optionnel, une seule manip)** : connecte ton téléphone à un
-   PC avec le débogage USB activé, puis lance une fois :
-   ```
-   adb shell pm grant com.fy.batterywidget android.permission.WRITE_SECURE_SETTINGS
-   ```
-   À partir de là, le mode économie s'activera tout seul sous 20 % réel
-   (hors charge), sans notification.
-2. **Sans cette manip** : le widget envoie une notification "Batterie réelle
-   sous 20 %" avec un raccourci direct vers l'écran d'activation — 1 tap
-   suffit.
+Le choix est mémorisé par widget (tu peux avoir deux widgets avec deux styles
+différents sur le même écran).
+
+## Consommation / ressources
+
+Le widget n'utilise **aucun** service en arrière-plan, aucun wake lock, aucun
+réseau, aucune géolocalisation. La seule permission déclarée
+(`RECEIVE_BOOT_COMPLETED`) sert uniquement à réafficher le widget une fois au
+redémarrage du téléphone — impact négligeable. Les mises à jour périodiques
+sont gérées par le système Android lui-même (regroupées avec les autres
+widgets, respectueuses du mode Doze). Il n'y a donc rien de plus à "arrêter"
+pour l'alléger : c'est déjà la configuration la plus économe possible pour ce
+type de widget.
 
 ## Comment obtenir l'APK
 
